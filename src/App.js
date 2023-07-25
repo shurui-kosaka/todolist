@@ -19,6 +19,10 @@ function App(props) {
   const listHeadingRef = useRef(null);
 
   function addTask(name) {
+    if(!name) {
+      alert("Enter an item!");
+      return;
+    }
     const newTask = { id: `todo-${nanoid()}`, name, completed: false };
     setTasks([...tasks, newTask]);
   }
@@ -92,17 +96,26 @@ function App(props) {
   }, [tasks.length, prevTaskLength]);
 
   return (
-    <div className="todoapp stack-large">
-      <h1>To-Do List</h1>
+    <div className="todoapp stack-large /*bg-genshin1 bg-cover bg-center bg-fixed bg-no-repeat*/">
+
+      <h1 className="flex justify-center text-7xl font-black rounded-lg">To-Do</h1>
+
       <Form addTask={addTask} />
 
       <div className="filters btn-group stack-exception">
         {filterList}
       </div>
 
-      <h2 id="list-heading" tabIndex="-1" ref={listHeadingRef}>
-        {headingText}
-      </h2>
+      <div className="bg-gray-200 p-1 rounded-lg opacity-80">
+        <h2
+          id="list-heading"
+          tabIndex="-1"
+          ref={listHeadingRef}
+          className="bg-white p-4 rounded-lg"
+        >
+          {headingText}
+        </h2>
+      </div>
 
       <ul
         className="todo-list stack-large stack-exception"
