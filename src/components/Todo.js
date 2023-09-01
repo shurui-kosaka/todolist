@@ -11,14 +11,11 @@ function usePrevious(value) {
 function Todo(props) {
   const [isEditing, setEditing] = useState(false);
   const [newName, setNewName] = useState("");
-  const [status, setStatus] = useState("pending");
   const editFieldRef = useRef(null);
   const editButtonRef = useRef(null);
   const wasEditing = usePrevious(isEditing);
 
-  function handleChange(e) {
-    setNewName(e.target.value);
-  }
+  const handleChange=(e)=>setNewName(e.target.value);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -29,13 +26,13 @@ function Todo(props) {
 
   const editingTemplate = (
     <form className="stack-small" onSubmit={handleSubmit}>
-      <div className="form-group">
+      <div className="form-group bg-neutral-950 text-white p-4 opacity-95 rounded-md">
         <label className="todo-label" htmlFor={props.id}>
           New name for {props.name}
         </label>
         <input
           id={props.id}
-          className="todo-text"
+          className="todo-text text-black"
           type="text"
           value={newName}
           onChange={handleChange}
@@ -73,7 +70,6 @@ function Todo(props) {
           return 'bg-yellow-500';
       }
     };
-
     return (
       <span
         className={`w-4 h-4 rounded-full ${getBadgeColor(status)} border-2 border-white absolute bottom-0.4 left-px`}
@@ -82,20 +78,20 @@ function Todo(props) {
   }
 
   const viewTemplate = (
-    <div className={`stack-small todo-${status}-bg`}>
+    <div className={`stack-small todo-${props.status}-bg rounded-md`}>
       <div className="c-cb relative inline-block">
-        <StatusBadge status={status} />
+        <StatusBadge status={props.status} />
         <input
           id={props.id}
           type="checkbox"
           defaultChecked={props.completed}
           onChange={() => props.toggleTaskCompleted(props.id)}
-          className="rounded-md"
         />
         <label className="todo-label" htmlFor={props.id}>
           {props.name}
         </label>
       </div>
+
       <div className="btn-group">
         <button
           type="button"
@@ -105,12 +101,21 @@ function Todo(props) {
         >
           Edit <span className="visually-hidden">{props.name}</span>
         </button>
+
         <button
           type="button"
           className="btn btn__danger bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
           onClick={() => props.deleteTask(props.id)}
         >
           Delete <span className="visually-hidden">{props.name}</span>
+        </button>
+
+        <button
+          type="button"
+          className="btn btn__danger bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+          onClick={() => props.cancelTask(props.id)}
+        >
+          Cancel
         </button>
       </div>
     </div>
@@ -124,16 +129,6 @@ function Todo(props) {
       editButtonRef.current.focus();
     }
   }, [wasEditing, isEditing]);
-
-  useEffect(() => {
-    setStatus(
-      props.completed
-        ? "completed"
-        : props.cancelled
-        ? "cancelled"
-        : "pending"
-    );
-  }, [props.completed, props.cancelled]);
 
   return (
     <li
